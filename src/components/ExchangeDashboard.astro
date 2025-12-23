@@ -1,8 +1,4 @@
----
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
-
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+import RateCard from './RateCard.astro';
 ---
 
 <div class="w-full max-w-5xl mx-auto space-y-6">
@@ -32,92 +28,17 @@ const t = useTranslations(lang);
         </div>
     </div>
     
-    <!-- CARD 1: USDT > CLP (COMPRA/ASK) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
-      <div class="flex items-center justify-between mb-6">
     <!-- CARD 1: CHILE (COMPRA/ASK) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
-          <span class="text-4xl">🇨🇱</span>
-          <span class="text-2xl tracking-tight">USDT</span>
-        </h3>
-        <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20 uppercase tracking-wide">
-          {lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy')}
-        </span>
-      </div>
-      
-      <div class="space-y-3" id="rates-clp-ask">
-        <!-- Loaders -->
-        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-      </div>
-    </div>
+    <RateCard flag="🇨🇱" type="buy" id="rates-clp-ask" />
 
-    <!-- CARD 2: USDT > CLP (VENTA/BID) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
-      <div class="flex items-center justify-between mb-6">
     <!-- CARD 2: CHILE (VENTA/BID) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
-          <span class="text-4xl">🇨🇱</span>
-          <span class="text-2xl tracking-tight">USDT</span>
-        </h3>
-         <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 uppercase tracking-wide">
-          {lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell')}
-        </span>
-      </div>
-      
-      <div class="space-y-3" id="rates-clp-bid">
-        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-      </div>
-    </div>
+    <RateCard flag="🇨🇱" type="sell" id="rates-clp-bid" />
 
-    <!-- CARD 3: USDT > BOB (COMPRA/ASK) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
     <!-- CARD 3: BOLIVIA (COMPRA/ASK) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
-            <span class="text-4xl">🇧🇴</span>
-            <span class="text-2xl tracking-tight">USDT</span>
-          </h3>
-          <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20 uppercase tracking-wide">
-            {lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy')}
-          </span>
-        </div>
-        
-        <div class="space-y-3" id="rates-bob-ask">
-          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-        </div>
-      </div>
+    <RateCard flag="🇧🇴" type="buy" id="rates-bob-ask" />
 
-    <!-- CARD 4: USDT > BOB (VENTA/BID) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
     <!-- CARD 4: BOLIVIA (VENTA/BID) -->
-    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
-            <span class="text-4xl">🇧🇴</span>
-            <span class="text-2xl tracking-tight">USDT</span>
-          </h3>
-           <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 uppercase tracking-wide">
-            {lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell')}
-          </span>
-        </div>
-        
-        <div class="space-y-3" id="rates-bob-bid">
-          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
-        </div>
-      </div>
+    <RateCard flag="🇧🇴" type="sell" id="rates-bob-bid" />
 
   </div>
 </div>

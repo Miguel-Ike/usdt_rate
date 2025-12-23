@@ -1,0 +1,41 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+interface Props {
+  flag: string; // Emoji character
+  type: 'buy' | 'sell';
+  id: string; // DOM ID for injection
+}
+
+const { flag, type, id } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const isBuy = type === 'buy';
+const badgeText = isBuy 
+  ? (lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy'))
+  : (lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell'));
+
+const badgeColorClass = isBuy
+  ? 'bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20'
+  : 'bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20';
+---
+
+<div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group h-full flex flex-col">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
+      <span class="text-4xl filter drop-shadow-sm">{flag}</span>
+      <span class="text-2xl tracking-tight text-on-surface-light dark:text-on-surface-dark group-hover:text-primary-light dark:group-hover:text-primary-dark transition-colors">USDT</span>
+    </h3>
+    <span class={`text-xs font-bold px-3 py-1.5 rounded-full border uppercase tracking-wide ${badgeColorClass} shadow-sm backdrop-blur-sm`}>
+      {badgeText}
+    </span>
+  </div>
+  
+  <div class="space-y-3 flex-grow" id={id}>
+    <!-- Helper Skeleton -->
+    <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+    <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+    <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+  </div>
+</div>
