@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import ExchangeDashboard from '../../components/ExchangeDashboard.astro';
 import { languages } from '../../i18n/ui';
 import { useTranslations } from '../../i18n/utils';
 
@@ -12,6 +13,12 @@ const t = useTranslations(lang as any);
 ---
 
 <Layout title={t('site.title')} lang={lang as string} description={t('site.description')}>
-  <h1 class="text-4xl font-bold text-primary-light dark:text-primary-dark mb-4 text-center px-4">{t('site.title')}</h1>
-  <p class="text-lg opacity-80 text-center px-4">{t('site.description')}</p>
+  <div class="w-full space-y-8">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold text-primary-light dark:text-primary-dark mb-2">{t('site.title')}</h1>
+      <p class="text-lg opacity-80">{t('site.description')}</p>
+    </div>
+    
+    <ExchangeDashboard />
+  </div>
 </Layout>

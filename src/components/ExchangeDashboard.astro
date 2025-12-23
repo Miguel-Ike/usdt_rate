@@ -1,0 +1,203 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div class="w-full max-w-4xl mx-auto space-y-6">
+  <!-- Header & Timer -->
+  <div class="flex flex-col items-center justify-center gap-2 mb-8">
+    <h2 class="text-2xl font-bold text-center text-on-surface-light dark:text-on-surface-dark">
+      {lang === 'es' ? 'Tipo de Cambio en Tiempo Real' : (lang === 'fr' ? 'Taux de Change en Temps Réel' : 'Real-time Exchange Rates')}
+    </h2>
+    <div class="flex items-center gap-2 text-sm font-medium opacity-80">
+      <span>{lang === 'es' ? 'Actualizando en:' : (lang === 'fr' ? 'Mise à jour dans :' : 'Updating in:')}</span>
+      <span id="timer" class="font-mono text-xl font-bold text-green-500">29s</span>
+    </div>
+  </div>
+
+  <!-- Dashboard Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    
+    <!-- CARD 1: USDT > CLP (COMPRA/ASK - User buys USDT) -->
+    <!-- API Note: "ask" is the price to BUY from the exchange P2P -->
+    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
+          <span>🇨🇱 CLP</span>
+          <span class="text-xs opacity-60">→</span>
+          <span>USDT</span>
+        </h3>
+        <span class="text-xs font-medium px-2 py-1 rounded bg-green-500/10 text-green-600 dark:text-green-400">
+          {lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy')}
+        </span>
+      </div>
+      
+      <div class="space-y-3" id="rates-clp-ask">
+        <!-- Loaders -->
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+    </div>
+
+    <!-- CARD 2: USDT > CLP (VENTA/BID - User sells USDT) -->
+    <!-- API Note: "bid" is the price to SELL to the exchange P2P -->
+    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
+          <span>USDT</span>
+          <span class="text-xs opacity-60">→</span>
+          <span>🇨🇱 CLP</span>
+        </h3>
+        <span class="text-xs font-medium px-2 py-1 rounded bg-red-500/10 text-red-600 dark:text-red-400">
+          {lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell')}
+        </span>
+      </div>
+      
+      <div class="space-y-3" id="rates-clp-bid">
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+    </div>
+
+    <!-- CARD 3: USDT > BOB (COMPRA/ASK) -->
+    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
+          <span>🇧🇴 BOB</span>
+          <span class="text-xs opacity-60">→</span>
+          <span>USDT</span>
+        </h3>
+        <span class="text-xs font-medium px-2 py-1 rounded bg-green-500/10 text-green-600 dark:text-green-400">
+          {lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy')}
+        </span>
+      </div>
+      
+      <div class="space-y-3" id="rates-bob-ask">
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+    </div>
+
+    <!-- CARD 4: USDT > BOB (VENTA/BID) -->
+    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
+          <span>USDT</span>
+          <span class="text-xs opacity-60">→</span>
+          <span>🇧🇴 BOB</span>
+        </h3>
+        <span class="text-xs font-medium px-2 py-1 rounded bg-red-500/10 text-red-600 dark:text-red-400">
+          {lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell')}
+        </span>
+      </div>
+      
+      <div class="space-y-3" id="rates-bob-bid">
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+  const URL_BOB = 'https://criptoya.com/api/USDT/BOB/0.1';
+  const URL_CLP = 'https://criptoya.com/api/USDT/CLP/0.1';
+  const TARGET_EXCHANGES = ['binancep2p', 'bybitp2p', 'bitgetp2p'];
+  
+  const EXCHANGE_NAMES = {
+    'binancep2p': 'Binance',
+    'bybitp2p': 'Bybit',
+    'bitgetp2p': 'Bitget'
+  };
+
+  let timeLeft = 29;
+  const timerEl = document.getElementById('timer');
+
+  function updateTimerColor(time) {
+    if (!timerEl) return;
+    
+    timerEl.classList.remove('text-green-500', 'text-yellow-500', 'text-red-500');
+    
+    if (time >= 20) {
+      timerEl.classList.add('text-green-500');
+    } else if (time >= 10) {
+      timerEl.classList.add('text-yellow-500');
+    } else {
+      timerEl.classList.add('text-red-500');
+    }
+  }
+
+  function renderRow(exchangeKey, price, format = 'BOB') {
+    const cleanName = EXCHANGE_NAMES[exchangeKey] || exchangeKey;
+    const formattedPrice = new Intl.NumberFormat('es-CL', { 
+      style: 'currency', 
+      currency: format,
+      minimumFractionDigits: 2 
+    }).format(price);
+
+    return `
+      <div class="flex items-center justify-between p-2 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+        <span class="font-medium text-on-surface-light/80 dark:text-on-surface-dark/80 capitalize">${cleanName}</span>
+        <span class="font-mono font-bold">${formattedPrice}</span>
+      </div>
+    `;
+  }
+
+  async function fetchAndRender() {
+    try {
+      const [bobData, clpData] = await Promise.all([
+        fetch(URL_BOB).then(r => r.json()),
+        fetch(URL_CLP).then(r => r.json())
+      ]);
+
+      // Helper to generate HTML for a section
+      const generateList = (data, type, currency) => {
+        return TARGET_EXCHANGES.map(ex => {
+          const item = data[ex];
+          if (!item) return '';
+          const price = type === 'ask' ? item.ask : item.bid; // Ask = Buy, Bid = Sell
+          return renderRow(ex, price, currency);
+        }).join('');
+      };
+
+      // Update DOM
+      const clpAskEl = document.getElementById('rates-clp-ask');
+      const clpBidEl = document.getElementById('rates-clp-bid');
+      const bobAskEl = document.getElementById('rates-bob-ask');
+      const bobBidEl = document.getElementById('rates-bob-bid');
+
+      if (clpAskEl) clpAskEl.innerHTML = generateList(clpData, 'ask', 'CLP');
+      if (clpBidEl) clpBidEl.innerHTML = generateList(clpData, 'bid', 'CLP');
+      if (bobAskEl) bobAskEl.innerHTML = generateList(bobData, 'ask', 'BOB');
+      if (bobBidEl) bobBidEl.innerHTML = generateList(bobData, 'bid', 'BOB');
+
+    } catch (e) {
+      console.error('Error fetching rates:', e);
+    }
+  }
+
+  // Timer Loop
+  setInterval(() => {
+    timeLeft--;
+    
+    if (timerEl) {
+      timerEl.textContent = `${timeLeft}s`;
+      updateTimerColor(timeLeft);
+    }
+
+    if (timeLeft <= 0) {
+      timeLeft = 30; // Reset to 30 so next tick shows 29
+      fetchAndRender();
+    }
+  }, 1000);
+
+  // Initial Load
+  fetchAndRender();
+</script>
