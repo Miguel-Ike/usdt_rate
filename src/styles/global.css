@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+@theme {
+  --color-surface-light: #FEF7FF;
+  --color-on-surface-light: #1D1B20;
+  --color-primary-light: #6750A4;
+  --color-outline-light: #79747E;
+
+  --color-surface-dark: #141218;
+  --color-on-surface-dark: #E6E1E5;
+  --color-primary-dark: #D0BCFF;
+  --color-outline-dark: #938F99;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  
+  /* Default to light theme variables */
+  :root {
+    color-scheme: light;
+  }
+
+  /* Dark mode overrides */
+  :root.dark {
+    color-scheme: dark;
+  }
+}
