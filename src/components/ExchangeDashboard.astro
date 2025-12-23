@@ -125,6 +125,9 @@ const t = useTranslations(lang);
 
       // Helper to generate HTML for a section
       const generateList = (data, type, currency) => {
+        // Priority Order: Bybit > Bitget > Binance
+        const PRIORITY = ['bybitp2p', 'bitgetp2p', 'binancep2p'];
+
         // 1. Extract valid prices
         const validItems = TARGET_EXCHANGES.map(ex => {
             const item = data[ex];
@@ -132,20 +135,41 @@ const t = useTranslations(lang);
             return { ex, price: type === 'ask' ? item.ask : item.bid };
         }).filter(item => item !== null);
 
-        // 2. Find Best Price
-        let bestPrice = null;
+        // 2. Find Best Price AND Winner (with priority)
+        let winnerEx = null;
+        
         if (validItems.length > 0) {
             const prices = validItems.map(i => i.price);
+            let bestPrice;
+            
             if (type === 'ask') {
-                bestPrice = Math.min(...prices); // Access lowest price to BUY
+                bestPrice = Math.min(...prices); // Lowest for Buy
             } else {
-                bestPrice = Math.max(...prices); // Access highest price to SELL
+                bestPrice = Math.max(...prices); // Highest for Sell
+            }
+
+            // Find all exchanges with this best price
+            const candidates = validItems.filter(i => i.price === bestPrice);
+
+            // Sort candidates by Priority Index (lower index = higher priority)
+            candidates.sort((a, b) => {
+                const idxA = PRIORITY.indexOf(a.ex);
+                const idxB = PRIORITY.indexOf(b.ex);
+                // Handle cases where exchange might not be in priority list (fallback to end)
+                const realIdxA = idxA === -1 ? 999 : idxA;
+                const realIdxB = idxB === -1 ? 999 : idxB;
+                return realIdxA - realIdxB;
+            });
+
+            // The first one is the winner
+            if (candidates.length > 0) {
+                winnerEx = candidates[0].ex;
             }
         }
 
         // 3. Render
         return validItems.map(item => {
-          const isBest = bestPrice !== null && item.price === bestPrice;
+          const isBest = winnerEx && item.ex === winnerEx;
           return renderRow(item.ex, item.price, currency, isBest, type);
         }).join('');
       };
