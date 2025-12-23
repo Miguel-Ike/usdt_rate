@@ -7,11 +7,15 @@
     --color-on-surface-light: #1D1B20;
     --color-primary-light: #6750A4;
     --color-outline-light: #79747E;
+    --color-background-light: #FEF7FF;
 
-    --color-surface-dark: #141218;
+    --color-surface-dark: #1E1E1E;
+    /* Distinct surface color */
     --color-on-surface-dark: #E6E1E5;
     --color-primary-dark: #D0BCFF;
     --color-outline-dark: #938F99;
+    --color-background-dark: #000000;
+    /* True Black */
 }
 
 @layer base {
