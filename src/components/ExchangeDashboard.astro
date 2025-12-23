@@ -5,103 +5,121 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<div class="w-full max-w-4xl mx-auto space-y-6">
-  <!-- Header & Timer -->
-  <div class="flex flex-col items-center justify-center gap-2 mb-8">
-    <h2 class="text-2xl font-bold text-center text-on-surface-light dark:text-on-surface-dark">
-      {lang === 'es' ? 'Tipo de Cambio en Tiempo Real' : (lang === 'fr' ? 'Taux de Change en Temps Réel' : 'Real-time Exchange Rates')}
-    </h2>
-    <div class="flex items-center gap-2 text-sm font-medium opacity-80">
-      <span>{lang === 'es' ? 'Actualizando en:' : (lang === 'fr' ? 'Mise à jour dans :' : 'Updating in:')}</span>
-      <span id="timer" class="font-mono text-xl font-bold text-green-500">29s</span>
-    </div>
-  </div>
+<div class="w-full max-w-5xl mx-auto space-y-6">
+  
+  <!-- Bento Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
 
-  <!-- Dashboard Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- STATUS CARD (Spans full width on mobile, top on desktop) -->
+    <div class="col-span-1 md:col-span-2 rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-8 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
+        <!-- Background decoration -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary-light/10 dark:bg-primary-dark/10 rounded-full blur-3xl group-hover:bg-primary-light/20 dark:group-hover:bg-primary-dark/20 transition-all duration-500"></div>
+
+        <div class="text-center md:text-left z-10">
+            <h2 class="text-3xl font-bold text-on-surface-light dark:text-on-surface-dark mb-2 tracking-tight">
+            {lang === 'es' ? 'Tipo de Cambio en Tiempo Real' : (lang === 'fr' ? 'Taux de Change en Temps Réel' : 'Real-time Exchange Rates')}
+            </h2>
+            <p class="text-sm font-medium opacity-70">
+            {lang === 'es' ? 'Actualización automática cada 30s' : (lang === 'fr' ? 'Mise à jour automatique toutes les 30s' : 'Auto-refresh every 30s')}
+            </p>
+        </div>
+
+        <div class="flex items-center gap-3 bg-surface-light/60 dark:bg-surface-dark/60 rounded-full px-6 py-3 border border-white/10 shadow-inner z-10">
+            <span class="text-sm font-bold opacity-60 uppercase tracking-widest text-[10px]">
+                {lang === 'es' ? 'TIMER' : 'TIMER'}
+            </span>
+            <span id="timer" class="font-mono text-3xl font-black text-green-500 tabular-nums">29s</span>
+        </div>
+    </div>
     
-    <!-- CARD 1: USDT > CLP (COMPRA/ASK - User buys USDT) -->
-    <!-- API Note: "ask" is the price to BUY from the exchange P2P -->
-    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
-          <span>🇨🇱 CLP</span>
-          <span class="text-xs opacity-60">→</span>
-          <span>USDT</span>
+    <!-- CARD 1: USDT > CLP (COMPRA/ASK) -->
+    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
+          <span class="text-2xl">🇨🇱</span>
+          <div class="flex flex-col leading-none">
+            <span>CLP</span>
+            <span class="text-[10px] opacity-50 font-normal uppercase tracking-wider">Peso Chileno</span>
+          </div>
         </h3>
-        <span class="text-xs font-medium px-2 py-1 rounded bg-green-500/10 text-green-600 dark:text-green-400">
+        <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20 uppercase tracking-wide">
           {lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy')}
         </span>
       </div>
       
       <div class="space-y-3" id="rates-clp-ask">
         <!-- Loaders -->
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
       </div>
     </div>
 
-    <!-- CARD 2: USDT > CLP (VENTA/BID - User sells USDT) -->
-    <!-- API Note: "bid" is the price to SELL to the exchange P2P -->
-    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
-          <span>USDT</span>
-          <span class="text-xs opacity-60">→</span>
-          <span>🇨🇱 CLP</span>
+    <!-- CARD 2: USDT > CLP (VENTA/BID) -->
+    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
+          <span class="text-2xl">🇺🇸</span>
+          <div class="flex flex-col leading-none">
+            <span>USDT</span>
+            <span class="text-[10px] opacity-50 font-normal uppercase tracking-wider">Tether</span>
+          </div>
         </h3>
-        <span class="text-xs font-medium px-2 py-1 rounded bg-red-500/10 text-red-600 dark:text-red-400">
+         <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 uppercase tracking-wide">
           {lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell')}
         </span>
       </div>
       
       <div class="space-y-3" id="rates-clp-bid">
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+        <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
       </div>
     </div>
 
     <!-- CARD 3: USDT > BOB (COMPRA/ASK) -->
-    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
-          <span>🇧🇴 BOB</span>
-          <span class="text-xs opacity-60">→</span>
-          <span>USDT</span>
-        </h3>
-        <span class="text-xs font-medium px-2 py-1 rounded bg-green-500/10 text-green-600 dark:text-green-400">
-          {lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy')}
-        </span>
+    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
+            <span class="text-2xl">🇧🇴</span>
+            <div class="flex flex-col leading-none">
+              <span>BOB</span>
+              <span class="text-[10px] opacity-50 font-normal uppercase tracking-wider">Boliviano</span>
+            </div>
+          </h3>
+          <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 border border-green-500/20 uppercase tracking-wide">
+            {lang === 'es' ? 'Compra' : (lang === 'fr' ? 'Achat' : 'Buy')}
+          </span>
+        </div>
+        
+        <div class="space-y-3" id="rates-bob-ask">
+          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+        </div>
       </div>
-      
-      <div class="space-y-3" id="rates-bob-ask">
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-      </div>
-    </div>
 
     <!-- CARD 4: USDT > BOB (VENTA/BID) -->
-    <div class="rounded-xl border border-outline-light/20 dark:border-outline-dark/20 bg-surface-light/50 dark:bg-surface-dark/50 backdrop-blur-sm p-6 shadow-sm">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-bold text-primary-light dark:text-primary-dark flex items-center gap-2">
-          <span>USDT</span>
-          <span class="text-xs opacity-60">→</span>
-          <span>🇧🇴 BOB</span>
-        </h3>
-        <span class="text-xs font-medium px-2 py-1 rounded bg-red-500/10 text-red-600 dark:text-red-400">
-          {lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell')}
-        </span>
+    <div class="rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-6 shadow-lg hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 group">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-on-surface-light dark:text-on-surface-dark flex items-center gap-3">
+            <span class="text-2xl">🇺🇸</span>
+            <div class="flex flex-col leading-none">
+              <span>USDT</span>
+              <span class="text-[10px] opacity-50 font-normal uppercase tracking-wider">Tether</span>
+            </div>
+          </h3>
+           <span class="text-xs font-bold px-3 py-1.5 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20 uppercase tracking-wide">
+            {lang === 'es' ? 'Venta' : (lang === 'fr' ? 'Vente' : 'Sell')}
+          </span>
+        </div>
+        
+        <div class="space-y-3" id="rates-bob-bid">
+          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+          <div class="animate-pulse h-12 bg-gray-200/50 dark:bg-gray-700/50 rounded-xl w-full"></div>
+        </div>
       </div>
-      
-      <div class="space-y-3" id="rates-bob-bid">
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-        <div class="animate-pulse h-8 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
-      </div>
-    </div>
 
   </div>
 </div>
@@ -115,6 +133,12 @@ const t = useTranslations(lang);
     'binancep2p': 'Binance',
     'bybitp2p': 'Bybit',
     'bitgetp2p': 'Bitget'
+  };
+
+  const EXCHANGE_ICONS = {
+    'binancep2p': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32"><path fill="#F3BA2F" d="M16.002 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16S7.163 0 16.002 0zm-5.63 9.47l-2.656 2.657l5.63 5.632l-2.95 2.95l-3.355-3.354l-2.657 2.656l6.012 6.013l6.015-6.013l-2.657-2.656l-3.358 3.354l-2.95-2.95l5.63-5.633zm11.26 2.657l-2.656-2.657l-5.632 5.633l2.952 2.95l3.354-3.354l2.657 2.656l-6.012 6.013l-6.012-6.013l2.656-2.656l3.355 3.354l2.95-2.95l-5.63-5.633z"/></svg>',
+    'bybitp2p': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M0 0h24v24H0z" opacity="0"/><path fill="currentColor" d="M17.65 6.95c.03-.22.17-.41.38-.48c.17-.07.39-.02.5.12c1 1.25 1.77 2.66 2.27 4.19c.07.22.01.46-.17.6c-.14.11-.32.13-.48.07a10.45 10.45 0 0 1-5.74-4.22c-.11-.17-.11-.38 0-.54c.11-.18.32-.27.52-.23c.95.19 1.83.35 2.72.49zm-8.8 8.8c-.85 1.55-2.26 2.6-4.04 2.89c-.18.03-.35-.06-.44-.22c-.09-.16-.06-.35.06-.48c.7-1.15 1.25-2.39 1.63-3.69c.04-.15.15-.26.3-.31c.15-.05.32-.01.43.09c1.9 1.65 3.3 3.1 4.56 4.67c.12.15.12.35.01.49c-.11.12-.27.18-.43.16c-.7-.09-1.4-.29-2.08-.6zm4.9-3.23c-1.63-3.8-5.32-6.57-9.66-6.68c-.18 0-.35.12-.41.29c-.06.17-.01.37.13.48c1.37 1.15 2.5 2.58 3.28 4.2c.4 1.34 1.3 2.5 2.64 3.12c1.78.83 3.86.6 5.46-.35c.16-.09.24-.29.18-.46c-.23-.62-.97-1.41-1.62-.6z"/></svg>', 
+    'bitgetp2p': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2.5 12a9.5 9.5 0 1 1 19 0a9.5 9.5 0 0 1-19 0Zm9.5-6.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13Z" opacity=".5"/><path fill="#02D5CC" d="M8.5 7.5h7v2.5H12v2h3.5v2.5h-7V12H12v-2H8.5V7.5Z"/></svg>'
   };
 
   let timeLeft = 29;
@@ -136,6 +160,7 @@ const t = useTranslations(lang);
 
   function renderRow(exchangeKey, price, format = 'BOB') {
     const cleanName = EXCHANGE_NAMES[exchangeKey] || exchangeKey;
+    const icon = EXCHANGE_ICONS[exchangeKey] || '<span class="w-5 h-5 bg-gray-500 rounded-full inline-block"></span>';
     const formattedPrice = new Intl.NumberFormat('es-CL', { 
       style: 'currency', 
       currency: format,
@@ -143,9 +168,14 @@ const t = useTranslations(lang);
     }).format(price);
 
     return `
-      <div class="flex items-center justify-between p-2 rounded hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-        <span class="font-medium text-on-surface-light/80 dark:text-on-surface-dark/80 capitalize">${cleanName}</span>
-        <span class="font-mono font-bold">${formattedPrice}</span>
+      <div class="flex items-center justify-between p-3 rounded-2xl bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-white/10">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-white dark:bg-black/20 flex items-center justify-center text-primary-light dark:text-primary-dark shadow-sm">
+                ${icon}
+            </div>
+            <span class="font-bold text-on-surface-light/80 dark:text-on-surface-dark/80 capitalize tracking-tight">${cleanName}</span>
+        </div>
+        <span class="font-mono font-bold text-lg tracking-tight">${formattedPrice}</span>
       </div>
     `;
   }
