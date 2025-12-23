@@ -1,4 +1,9 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import RateCard from './RateCard.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <div class="w-full max-w-5xl mx-auto space-y-6">
