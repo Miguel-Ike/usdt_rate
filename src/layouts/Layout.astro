@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+
+interface Props {
+  title: string;
+  lang: string;
+  description?: string;
+}
+
+const { title, lang, description } = Astro.props;
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    
+    <script is:inline>
+      // Immediately check local storage or system preference to avoid flash
+      if (
+        localStorage.theme === 'dark' ||
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body class="bg-surface-light text-on-surface-light dark:bg-surface-dark dark:text-on-surface-dark transition-colors duration-300 min-h-screen flex flex-col pt-16">
+    <Navbar />
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center justify-center">
+      <slot />
+    </main>
+  </body>
+</html>
