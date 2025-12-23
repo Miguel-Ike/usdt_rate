@@ -82,7 +82,7 @@ const t = useTranslations(lang);
     }
   }
 
-  function renderRow(exchangeKey, price, format = 'BOB') {
+  function renderRow(exchangeKey, price, format = 'BOB', isBest = false, type = 'ask') {
     const cleanName = EXCHANGE_NAMES[exchangeKey] || exchangeKey;
     const icon = EXCHANGE_ICONS[exchangeKey] || '<span class="w-5 h-5 bg-gray-500 rounded-full inline-block"></span>';
     const formattedPrice = new Intl.NumberFormat('es-CL', { 
@@ -91,15 +91,27 @@ const t = useTranslations(lang);
       minimumFractionDigits: 2 
     }).format(price);
 
+    // Highlight classes
+    let priceClass = "font-mono font-bold text-lg tracking-tight transition-all duration-300";
+    if (isBest) {
+      if (type === 'ask') {
+        // Best Buy = Lowest Price = Green
+        priceClass += " text-green-500 dark:text-green-400 scale-110";
+      } else {
+        // Best Sell = Highest Price = Red
+        priceClass += " text-red-500 dark:text-red-400 scale-110";
+      }
+    }
+
     return `
-      <div class="flex items-center justify-between p-3 rounded-2xl bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-white/10">
+      <div class="flex items-center justify-between p-3 rounded-2xl bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-white/10 ${isBest ? 'bg-white/10 dark:bg-white/5 border-white/20' : ''}">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-white dark:bg-black/20 flex items-center justify-center text-primary-light dark:text-primary-dark shadow-sm">
                 ${icon}
             </div>
             <span class="font-bold text-on-surface-light/80 dark:text-on-surface-dark/80 capitalize tracking-tight">${cleanName}</span>
         </div>
-        <span class="font-mono font-bold text-lg tracking-tight">${formattedPrice}</span>
+        <span class="${priceClass}">${formattedPrice}</span>
       </div>
     `;
   }
@@ -113,11 +125,28 @@ const t = useTranslations(lang);
 
       // Helper to generate HTML for a section
       const generateList = (data, type, currency) => {
-        return TARGET_EXCHANGES.map(ex => {
-          const item = data[ex];
-          if (!item) return '';
-          const price = type === 'ask' ? item.ask : item.bid; // Ask = Buy, Bid = Sell
-          return renderRow(ex, price, currency);
+        // 1. Extract valid prices
+        const validItems = TARGET_EXCHANGES.map(ex => {
+            const item = data[ex];
+            if (!item) return null;
+            return { ex, price: type === 'ask' ? item.ask : item.bid };
+        }).filter(item => item !== null);
+
+        // 2. Find Best Price
+        let bestPrice = null;
+        if (validItems.length > 0) {
+            const prices = validItems.map(i => i.price);
+            if (type === 'ask') {
+                bestPrice = Math.min(...prices); // Access lowest price to BUY
+            } else {
+                bestPrice = Math.max(...prices); // Access highest price to SELL
+            }
+        }
+
+        // 3. Render
+        return validItems.map(item => {
+          const isBest = bestPrice !== null && item.price === bestPrice;
+          return renderRow(item.ex, item.price, currency, isBest, type);
         }).join('');
       };
 
