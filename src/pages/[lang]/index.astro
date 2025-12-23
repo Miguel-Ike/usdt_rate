@@ -1,15 +1,25 @@
 ---
-import '../styles/global.css';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import '../../styles/global.css';
+import ThemeToggle from '../../components/ThemeToggle.astro';
+import LanguagePicker from '../../components/LanguagePicker.astro';
+import { languages } from '../../i18n/ui';
+import { useTranslations } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params;
+const t = useTranslations(lang as any);
 ---
 
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>{t('site.title')}</title>
         <script is:inline>
             // Immediately check local storage or system preference to avoid flash
             if (
@@ -23,8 +33,11 @@ import ThemeToggle from '../components/ThemeToggle.astro';
           </script>
 	</head>
 	<body class="bg-surface-light text-on-surface-light dark:bg-surface-dark dark:text-on-surface-dark transition-colors duration-300 min-h-screen flex flex-col items-center justify-center">
-        <ThemeToggle />
-		<h1 class="text-4xl font-bold text-primary-light dark:text-primary-dark mb-4">Astro Theme Switcher</h1>
-        <p class="text-lg opacity-80">Android Material 3 Colors</p>
+        <div class="absolute top-4 right-4 flex gap-4 items-center">
+            <LanguagePicker />
+            <ThemeToggle />
+        </div>
+		<h1 class="text-4xl font-bold text-primary-light dark:text-primary-dark mb-4 text-center px-4">{t('site.title')}</h1>
+        <p class="text-lg opacity-80 text-center px-4">{t('site.description')}</p>
 	</body>
 </html>
