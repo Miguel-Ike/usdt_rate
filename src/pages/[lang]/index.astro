@@ -14,11 +14,6 @@ const t = useTranslations(lang as any);
 
 <Layout title={t('site.title')} lang={lang as string} description={t('site.description')}>
   <div class="w-full space-y-8">
-    <div class="text-center">
-      <h1 class="text-4xl font-bold text-primary-light dark:text-primary-dark mb-2">{t('site.title')}</h1>
-      <p class="text-lg opacity-80">{t('site.description')}</p>
-    </div>
-    
     <ExchangeDashboard />
   </div>
 </Layout>
