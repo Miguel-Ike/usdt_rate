@@ -243,14 +243,18 @@ const t = useTranslations(lang);
       const targetList = document.getElementById(card.id);
       if (targetList) {
         // RateCard structure: root div > header div > content div (id=card.id)
-        // We want to hide the root div (grandparent of content div)
-        const rootCard = targetList.closest(".group"); // The root div has class 'group'
+        // We want to hide the root div (parent of parent of content div)
+        // `RateCard` renders a div with class `rounded-3xl... group ...`
+        // So targetList.closest('.group') refers to that root div.
+        const rootCard = targetList.closest(".group");
 
         if (rootCard) {
+          // rootCard IS the card element placed in the grid.
+          // We should toggle IT, not its parent (which is the main grid).
           if (card.curr === currentCurrency) {
-            rootCard.parentElement.style.display = ""; // Show the column wrapper
+            rootCard.style.display = "";
           } else {
-            rootCard.parentElement.style.display = "none"; // Hide the column wrapper
+            rootCard.style.display = "none";
           }
         }
       }
