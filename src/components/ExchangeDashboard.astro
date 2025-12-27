@@ -191,12 +191,7 @@ const t = useTranslations(lang);
   let currentMode = "client";
   let currentCurrency = "CLP";
 
-  // Make available globally for onclick
-  window.setCurrency = (curr) => {
-    currentCurrency = curr;
-    updateCurrencyUI();
-    filterDashboard();
-  };
+  // window.setCurrency is defined below in initialization block to handle storage
 
   function updateCurrencyUI() {
     const btnCLP = document.getElementById("btn-clp");
@@ -482,6 +477,68 @@ const t = useTranslations(lang);
     }
   }, 1000);
 
-  // Initial Load
-  filterDashboard();
+  // Global scope for onclick access
+  window.setCurrency = (curr) => {
+    currentCurrency = curr;
+    localStorage.setItem("dashboard_currency", curr); // Save preference
+    updateCurrencyUI();
+    filterDashboard();
+  };
+
+  // Listen for mode changes from ModeSwitch and save
+  document.addEventListener("mode-change", (e) => {
+    currentMode = e.detail.mode;
+    localStorage.setItem("dashboard_mode", currentMode); // Save preference
+    fetchAndRender(); // Re-render immediately
+  });
+
+  // ... (fetchAndRender, updateCurrencyUI, filterDashboard definitions stay same) ...
+
+  // Initialization Logic
+  const initDashboard = () => {
+    // 1. Restore Currency
+    const storedCurrency = localStorage.getItem("dashboard_currency");
+    if (
+      storedCurrency &&
+      (storedCurrency === "CLP" || storedCurrency === "BOB")
+    ) {
+      setCurrency(storedCurrency);
+    } else {
+      // Default
+      updateCurrencyUI();
+      filterDashboard();
+    }
+
+    // 2. Restore Mode
+    const storedMode = localStorage.getItem("dashboard_mode");
+    if (storedMode === "merchant") {
+      // We need to sync the UI switch.
+      // The switch is inside ModeSwitch.astro, accessible via ID 'mode-toggle'.
+      const toggle = document.getElementById("mode-toggle");
+      if (toggle) {
+        toggle.checked = true;
+        // Trigger change event so ModeSwitch.astro updates its classes and handling
+        toggle.dispatchEvent(new Event("change"));
+      }
+    }
+
+    // Initial Fetch
+    // Note: filterDashboard called in setCurrency triggers fetchAndRender if needed?
+    // filterDashboard calls fetchAndRender? No, filterDashboard just hides/shows then calls fetchAndRender?
+    // Let's check filterDashboard logic.
+    // It calls fetchAndRender() at the end.
+    // So if setCurrency was called, we are good.
+    // If NOT called (default), we need to call it?
+    if (!storedCurrency) {
+      filterDashboard();
+    }
+  };
+
+  // Run Init
+  initDashboard();
+
+  // Auto-refresh interval
+  setInterval(() => {
+    fetchAndRender();
+  }, 30000);
 </script>
