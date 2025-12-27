@@ -1,0 +1,94 @@
+---
+// src/components/ModeSwitch.astro
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div class="flex items-center gap-4 mt-4">
+    <span
+        class="text-sm font-medium text-on-surface-light/70 dark:text-on-surface-dark/70 transition-colors"
+        id="mode-label-client"
+    >
+        {
+            lang === "es"
+                ? "Modo Cliente"
+                : lang === "fr"
+                  ? "Mode Client"
+                  : "Client Mode"
+        }
+    </span>
+
+    <label
+        for="mode-toggle"
+        class="relative inline-flex items-center cursor-pointer group"
+    >
+        <input type="checkbox" id="mode-toggle" class="sr-only peer" />
+        <div
+            class="w-14 h-7 bg-surface-light-alt dark:bg-surface-dark-alt peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-light/20 dark:peer-focus:ring-primary-dark/20 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary-light dark:peer-checked:bg-primary-dark shadow-inner"
+        >
+        </div>
+    </label>
+
+    <span
+        class="text-sm font-medium text-on-surface-light/70 dark:text-on-surface-dark/70 transition-colors"
+        id="mode-label-merchant"
+    >
+        {
+            lang === "es"
+                ? "Modo Comerciante"
+                : lang === "fr"
+                  ? "Mode Commerçant"
+                  : "Merchant Mode"
+        }
+    </span>
+</div>
+
+<script>
+    // Simple visual toggle logic for now
+    const toggle = document.getElementById("mode-toggle");
+    const labelClient = document.getElementById("mode-label-client");
+    const labelMerchant = document.getElementById("mode-label-merchant");
+
+    if (toggle && labelClient && labelMerchant) {
+        // Initialize state (default to Client mode/unchecked)
+
+        const updateLabels = () => {
+            if (toggle instanceof HTMLInputElement && toggle.checked) {
+                // Merchant Mode
+                labelClient.classList.add("opacity-50");
+                labelMerchant.classList.remove("opacity-50");
+                labelMerchant.classList.add(
+                    "text-primary-light",
+                    "dark:text-primary-dark",
+                    "font-bold",
+                );
+                labelClient.classList.remove(
+                    "text-primary-light",
+                    "dark:text-primary-dark",
+                    "font-bold",
+                );
+            } else {
+                // Client Mode
+                labelMerchant.classList.add("opacity-50");
+                labelClient.classList.remove("opacity-50");
+                labelClient.classList.add(
+                    "text-primary-light",
+                    "dark:text-primary-dark",
+                    "font-bold",
+                );
+                labelMerchant.classList.remove(
+                    "text-primary-light",
+                    "dark:text-primary-dark",
+                    "font-bold",
+                );
+            }
+        };
+
+        toggle.addEventListener("change", updateLabels);
+
+        // Run once on load
+        updateLabels();
+    }
+</script>

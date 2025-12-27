@@ -1,38 +1,65 @@
 ---
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import RateCard from './RateCard.astro';
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import RateCard from "./RateCard.astro";
+import ModeSwitch from "./ModeSwitch.astro";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
 <div class="w-full max-w-5xl mx-auto space-y-6">
-  
   <!-- Bento Grid -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-
     <!-- STATUS CARD (Spans full width on mobile, top on desktop) -->
-    <div class="col-span-1 md:col-span-2 rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-8 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group">
-        <!-- Background decoration -->
-        <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary-light/10 dark:bg-primary-dark/10 rounded-full blur-3xl group-hover:bg-primary-light/20 dark:group-hover:bg-primary-dark/20 transition-all duration-500"></div>
+    <div
+      class="col-span-1 md:col-span-2 rounded-3xl border border-white/20 dark:border-white/10 bg-surface-light/40 dark:bg-surface-dark/40 backdrop-blur-xl p-8 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden group"
+    >
+      <!-- Background decoration -->
+      <div
+        class="absolute -top-10 -right-10 w-40 h-40 bg-primary-light/10 dark:bg-primary-dark/10 rounded-full blur-3xl group-hover:bg-primary-light/20 dark:group-hover:bg-primary-dark/20 transition-all duration-500"
+      >
+      </div>
 
-        <div class="text-center md:text-left z-10">
-            <h2 class="text-3xl font-bold text-on-surface-light dark:text-on-surface-dark mb-2 tracking-tight">
-            {lang === 'es' ? 'Tipo de Cambio en Tiempo Real' : (lang === 'fr' ? 'Taux de Change en Temps Réel' : 'Real-time Exchange Rates')}
-            </h2>
-            <p class="text-sm font-medium opacity-70">
-            {lang === 'es' ? 'Actualización automática cada 30s' : (lang === 'fr' ? 'Mise à jour automatique toutes les 30s' : 'Auto-refresh every 30s')}
-            </p>
-        </div>
+      <div class="text-center md:text-left z-10">
+        <h2
+          class="text-3xl font-bold text-on-surface-light dark:text-on-surface-dark mb-2 tracking-tight"
+        >
+          {
+            lang === "es"
+              ? "Tipo de Cambio en Tiempo Real"
+              : lang === "fr"
+                ? "Taux de Change en Temps Réel"
+                : "Real-time Exchange Rates"
+          }
+        </h2>
+        <p class="text-sm font-medium opacity-70 mb-4">
+          {
+            lang === "es"
+              ? "Actualización automática cada 30s"
+              : lang === "fr"
+                ? "Mise à jour automatique toutes les 30s"
+                : "Auto-refresh every 30s"
+          }
+        </p>
+        <ModeSwitch />
+      </div>
 
-        <div class="flex items-center gap-3 bg-surface-light/60 dark:bg-surface-dark/60 rounded-full px-6 py-3 border border-white/10 shadow-inner z-10">
-            <span class="text-sm font-bold opacity-60 uppercase tracking-widest text-[10px]">
-                {lang === 'es' ? 'TIMER' : 'TIMER'}
-            </span>
-            <span id="timer" class="font-mono text-3xl font-black text-green-500 tabular-nums">29s</span>
-        </div>
+      <div
+        class="flex items-center gap-3 bg-surface-light/60 dark:bg-surface-dark/60 rounded-full px-6 py-3 border border-white/10 shadow-inner z-10"
+      >
+        <span
+          class="text-sm font-bold opacity-60 uppercase tracking-widest text-[10px]"
+        >
+          {lang === "es" ? "TIMER" : "TIMER"}
+        </span>
+        <span
+          id="timer"
+          class="font-mono text-3xl font-black text-green-500 tabular-nums"
+          >29s</span
+        >
+      </div>
     </div>
-    
+
     <!-- CARD 1: CHILE (COMPRA/ASK) -->
     <RateCard countryCode="cl" type="buy" id="rates-clp-ask" />
 
@@ -44,57 +71,72 @@ const t = useTranslations(lang);
 
     <!-- CARD 4: BOLIVIA (VENTA/BID) -->
     <RateCard countryCode="bo" type="sell" id="rates-bob-bid" />
-
   </div>
 </div>
 
 <script is:inline>
-  const URL_BOB = 'https://criptoya.com/api/USDT/BOB/0.1';
-  const URL_CLP = 'https://criptoya.com/api/USDT/CLP/0.1';
-  const TARGET_EXCHANGES = ['binancep2p', 'bybitp2p', 'bitgetp2p'];
-  
+  const URL_BOB = "https://criptoya.com/api/USDT/BOB/0.1";
+  const URL_CLP = "https://criptoya.com/api/USDT/CLP/0.1";
+  const TARGET_EXCHANGES = ["binancep2p", "bybitp2p", "bitgetp2p"];
+
   const EXCHANGE_NAMES = {
-    'binancep2p': 'Binance',
-    'bybitp2p': 'Bybit',
-    'bitgetp2p': 'Bitget'
+    binancep2p: "Binance",
+    bybitp2p: "Bybit",
+    bitgetp2p: "Bitget",
   };
 
   const EXCHANGE_ICONS = {
-    'binancep2p': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32"><path fill="#F3BA2F" d="M16.002 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16S7.163 0 16.002 0zm-5.63 9.47l-2.656 2.657l5.63 5.632l-2.95 2.95l-3.355-3.354l-2.657 2.656l6.012 6.013l6.015-6.013l-2.657-2.656l-3.358 3.354l-2.95-2.95l5.63-5.633zm11.26 2.657l-2.656-2.657l-5.632 5.633l2.952 2.95l3.354-3.354l2.657 2.656l-6.012 6.013l-6.012-6.013l2.656-2.656l3.355 3.354l2.95-2.95l-5.63-5.633z"/></svg>',
-    'bybitp2p': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M0 0h24v24H0z" opacity="0"/><path fill="currentColor" d="M17.65 6.95c.03-.22.17-.41.38-.48c.17-.07.39-.02.5.12c1 1.25 1.77 2.66 2.27 4.19c.07.22.01.46-.17.6c-.14.11-.32.13-.48.07a10.45 10.45 0 0 1-5.74-4.22c-.11-.17-.11-.38 0-.54c.11-.18.32-.27.52-.23c.95.19 1.83.35 2.72.49zm-8.8 8.8c-.85 1.55-2.26 2.6-4.04 2.89c-.18.03-.35-.06-.44-.22c-.09-.16-.06-.35.06-.48c.7-1.15 1.25-2.39 1.63-3.69c.04-.15.15-.26.3-.31c.15-.05.32-.01.43.09c1.9 1.65 3.3 3.1 4.56 4.67c.12.15.12.35.01.49c-.11.12-.27.18-.43.16c-.7-.09-1.4-.29-2.08-.6zm4.9-3.23c-1.63-3.8-5.32-6.57-9.66-6.68c-.18 0-.35.12-.41.29c-.06.17-.01.37.13.48c1.37 1.15 2.5 2.58 3.28 4.2c.4 1.34 1.3 2.5 2.64 3.12c1.78.83 3.86.6 5.46-.35c.16-.09.24-.29.18-.46c-.23-.62-.97-1.41-1.62-.6z"/></svg>', 
-    'bitgetp2p': '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2.5 12a9.5 9.5 0 1 1 19 0a9.5 9.5 0 0 1-19 0Zm9.5-6.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13Z" opacity=".5"/><path fill="#02D5CC" d="M8.5 7.5h7v2.5H12v2h3.5v2.5h-7V12H12v-2H8.5V7.5Z"/></svg>'
+    binancep2p:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32"><path fill="#F3BA2F" d="M16.002 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16S7.163 0 16.002 0zm-5.63 9.47l-2.656 2.657l5.63 5.632l-2.95 2.95l-3.355-3.354l-2.657 2.656l6.012 6.013l6.015-6.013l-2.657-2.656l-3.358 3.354l-2.95-2.95l5.63-5.633zm11.26 2.657l-2.656-2.657l-5.632 5.633l2.952 2.95l3.354-3.354l2.657 2.656l-6.012 6.013l-6.012-6.013l2.656-2.656l3.355 3.354l2.95-2.95l-5.63-5.633z"/></svg>',
+    bybitp2p:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M0 0h24v24H0z" opacity="0"/><path fill="currentColor" d="M17.65 6.95c.03-.22.17-.41.38-.48c.17-.07.39-.02.5.12c1 1.25 1.77 2.66 2.27 4.19c.07.22.01.46-.17.6c-.14.11-.32.13-.48.07a10.45 10.45 0 0 1-5.74-4.22c-.11-.17-.11-.38 0-.54c.11-.18.32-.27.52-.23c.95.19 1.83.35 2.72.49zm-8.8 8.8c-.85 1.55-2.26 2.6-4.04 2.89c-.18.03-.35-.06-.44-.22c-.09-.16-.06-.35.06-.48c.7-1.15 1.25-2.39 1.63-3.69c.04-.15.15-.26.3-.31c.15-.05.32-.01.43.09c1.9 1.65 3.3 3.1 4.56 4.67c.12.15.12.35.01.49c-.11.12-.27.18-.43.16c-.7-.09-1.4-.29-2.08-.6zm4.9-3.23c-1.63-3.8-5.32-6.57-9.66-6.68c-.18 0-.35.12-.41.29c-.06.17-.01.37.13.48c1.37 1.15 2.5 2.58 3.28 4.2c.4 1.34 1.3 2.5 2.64 3.12c1.78.83 3.86.6 5.46-.35c.16-.09.24-.29.18-.46c-.23-.62-.97-1.41-1.62-.6z"/></svg>',
+    bitgetp2p:
+      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2.5 12a9.5 9.5 0 1 1 19 0a9.5 9.5 0 0 1-19 0Zm9.5-6.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13Z" opacity=".5"/><path fill="#02D5CC" d="M8.5 7.5h7v2.5H12v2h3.5v2.5h-7V12H12v-2H8.5V7.5Z"/></svg>',
   };
 
   let timeLeft = 29;
-  const timerEl = document.getElementById('timer');
+  const timerEl = document.getElementById("timer");
 
   function updateTimerColor(time) {
     if (!timerEl) return;
-    
-    timerEl.classList.remove('text-green-500', 'text-yellow-500', 'text-red-500');
-    
+
+    timerEl.classList.remove(
+      "text-green-500",
+      "text-yellow-500",
+      "text-red-500",
+    );
+
     if (time >= 20) {
-      timerEl.classList.add('text-green-500');
+      timerEl.classList.add("text-green-500");
     } else if (time >= 10) {
-      timerEl.classList.add('text-yellow-500');
+      timerEl.classList.add("text-yellow-500");
     } else {
-      timerEl.classList.add('text-red-500');
+      timerEl.classList.add("text-red-500");
     }
   }
 
-  function renderRow(exchangeKey, price, format = 'BOB', isBest = false, type = 'ask') {
+  function renderRow(
+    exchangeKey,
+    price,
+    format = "BOB",
+    isBest = false,
+    type = "ask",
+  ) {
     const cleanName = EXCHANGE_NAMES[exchangeKey] || exchangeKey;
-    const icon = EXCHANGE_ICONS[exchangeKey] || '<span class="w-5 h-5 bg-gray-500 rounded-full inline-block"></span>';
-    const formattedPrice = new Intl.NumberFormat('es-CL', { 
-      style: 'currency', 
+    const icon =
+      EXCHANGE_ICONS[exchangeKey] ||
+      '<span class="w-5 h-5 bg-gray-500 rounded-full inline-block"></span>';
+    const formattedPrice = new Intl.NumberFormat("es-CL", {
+      style: "currency",
       currency: format,
-      minimumFractionDigits: 2 
+      minimumFractionDigits: 2,
     }).format(price);
 
     // Highlight classes
-    let priceClass = "font-mono font-bold text-lg tracking-tight transition-all duration-300";
+    let priceClass =
+      "font-mono font-bold text-lg tracking-tight transition-all duration-300";
     if (isBest) {
-      if (type === 'ask') {
+      if (type === "ask") {
         // Best Buy = Lowest Price = Green
         priceClass += " text-green-500 dark:text-green-400 scale-110";
       } else {
@@ -104,7 +146,7 @@ const t = useTranslations(lang);
     }
 
     return `
-      <div class="flex items-center justify-between p-3 rounded-2xl bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-white/10 ${isBest ? 'bg-white/10 dark:bg-white/5 border-white/20' : ''}">
+      <div class="flex items-center justify-between p-3 rounded-2xl bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-white/10 ${isBest ? "bg-white/10 dark:bg-white/5 border-white/20" : ""}">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-white dark:bg-black/20 flex items-center justify-center text-primary-light dark:text-primary-dark shadow-sm">
                 ${icon}
@@ -119,81 +161,82 @@ const t = useTranslations(lang);
   async function fetchAndRender() {
     try {
       const [bobData, clpData] = await Promise.all([
-        fetch(URL_BOB).then(r => r.json()),
-        fetch(URL_CLP).then(r => r.json())
+        fetch(URL_BOB).then((r) => r.json()),
+        fetch(URL_CLP).then((r) => r.json()),
       ]);
 
       // Helper to generate HTML for a section
       const generateList = (data, type, currency) => {
         // Priority Order: Bybit > Bitget > Binance
-        const PRIORITY = ['bybitp2p', 'bitgetp2p', 'binancep2p'];
+        const PRIORITY = ["bybitp2p", "bitgetp2p", "binancep2p"];
 
         // 1. Extract valid prices
-        const validItems = TARGET_EXCHANGES.map(ex => {
-            const item = data[ex];
-            if (!item) return null;
-            return { ex, price: type === 'ask' ? item.ask : item.bid };
-        }).filter(item => item !== null);
+        const validItems = TARGET_EXCHANGES.map((ex) => {
+          const item = data[ex];
+          if (!item) return null;
+          return { ex, price: type === "ask" ? item.ask : item.bid };
+        }).filter((item) => item !== null);
 
         // 2. Find Best Price AND Winner (with priority)
         let winnerEx = null;
-        
+
         if (validItems.length > 0) {
-            const prices = validItems.map(i => i.price);
-            let bestPrice;
-            
-            if (type === 'ask') {
-                bestPrice = Math.min(...prices); // Lowest for Buy
-            } else {
-                bestPrice = Math.max(...prices); // Highest for Sell
-            }
+          const prices = validItems.map((i) => i.price);
+          let bestPrice;
 
-            // Find all exchanges with this best price
-            const candidates = validItems.filter(i => i.price === bestPrice);
+          if (type === "ask") {
+            bestPrice = Math.min(...prices); // Lowest for Buy
+          } else {
+            bestPrice = Math.max(...prices); // Highest for Sell
+          }
 
-            // Sort candidates by Priority Index (lower index = higher priority)
-            candidates.sort((a, b) => {
-                const idxA = PRIORITY.indexOf(a.ex);
-                const idxB = PRIORITY.indexOf(b.ex);
-                // Handle cases where exchange might not be in priority list (fallback to end)
-                const realIdxA = idxA === -1 ? 999 : idxA;
-                const realIdxB = idxB === -1 ? 999 : idxB;
-                return realIdxA - realIdxB;
-            });
+          // Find all exchanges with this best price
+          const candidates = validItems.filter((i) => i.price === bestPrice);
 
-            // The first one is the winner
-            if (candidates.length > 0) {
-                winnerEx = candidates[0].ex;
-            }
+          // Sort candidates by Priority Index (lower index = higher priority)
+          candidates.sort((a, b) => {
+            const idxA = PRIORITY.indexOf(a.ex);
+            const idxB = PRIORITY.indexOf(b.ex);
+            // Handle cases where exchange might not be in priority list (fallback to end)
+            const realIdxA = idxA === -1 ? 999 : idxA;
+            const realIdxB = idxB === -1 ? 999 : idxB;
+            return realIdxA - realIdxB;
+          });
+
+          // The first one is the winner
+          if (candidates.length > 0) {
+            winnerEx = candidates[0].ex;
+          }
         }
 
         // 3. Render
-        return validItems.map(item => {
-          const isBest = winnerEx && item.ex === winnerEx;
-          return renderRow(item.ex, item.price, currency, isBest, type);
-        }).join('');
+        return validItems
+          .map((item) => {
+            const isBest = winnerEx && item.ex === winnerEx;
+            return renderRow(item.ex, item.price, currency, isBest, type);
+          })
+          .join("");
       };
 
       // Update DOM
-      const clpAskEl = document.getElementById('rates-clp-ask');
-      const clpBidEl = document.getElementById('rates-clp-bid');
-      const bobAskEl = document.getElementById('rates-bob-ask');
-      const bobBidEl = document.getElementById('rates-bob-bid');
+      const clpAskEl = document.getElementById("rates-clp-ask");
+      const clpBidEl = document.getElementById("rates-clp-bid");
+      const bobAskEl = document.getElementById("rates-bob-ask");
+      const bobBidEl = document.getElementById("rates-bob-bid");
 
-      if (clpAskEl) clpAskEl.innerHTML = generateList(clpData, 'ask', 'CLP');
-      if (clpBidEl) clpBidEl.innerHTML = generateList(clpData, 'bid', 'CLP');
-      if (bobAskEl) bobAskEl.innerHTML = generateList(bobData, 'ask', 'BOB');
-      if (bobBidEl) bobBidEl.innerHTML = generateList(bobData, 'bid', 'BOB');
-
+      if (clpAskEl) clpAskEl.innerHTML = generateList(clpData, "ask", "CLP");
+      if (clpBidEl) clpBidEl.innerHTML = generateList(clpData, "bid", "CLP");
+      if (bobAskEl) bobAskEl.innerHTML = generateList(bobData, "ask", "BOB");
+      if (bobBidEl) bobBidEl.innerHTML = generateList(bobData, "bid", "BOB");
     } catch (e) {
-      console.error('Error fetching rates:', e);
+      console.error("Error fetching rates:", e);
     }
   }
 
   // Timer Loop
   setInterval(() => {
     timeLeft--;
-    
+
     if (timerEl) {
       timerEl.textContent = `${timeLeft}s`;
       updateTimerColor(timeLeft);
