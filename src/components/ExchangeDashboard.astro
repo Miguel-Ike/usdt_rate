@@ -359,9 +359,15 @@ const t = useTranslations(lang);
             };
             const txt = t[lang] || t.es;
 
+            // Conditional Border Logic
+            const isProfitable = spread > 0;
+            const borderColor = isProfitable
+              ? "border-green-500/50"
+              : "border-red-500/50";
+
             return `
-                    <div class="mb-4 last:mb-0">
-                        <p class="text-sm leading-relaxed text-on-surface-light/90 dark:text-on-surface-dark/90">
+                    <div class="p-4 rounded-xl bg-surface-light-alt dark:bg-surface-dark-alt border ${borderColor} text-sm font-mono mb-4 last:mb-0">
+                        <p class="leading-relaxed text-on-surface-light/90 dark:text-on-surface-dark/90 text-sm">
                             ${txt.buyAt} <strong class="text-green-500">${cleanName(bestBuyOpp.ex)}</strong> ${txt.at} <span class="font-mono font-bold">${fmt(bestBuyOpp.price)}</span> 
                             ${txt.sellAt} <strong class="text-red-500">${cleanName(bestSellOpp.ex)}</strong> ${txt.at} <span class="font-mono font-bold">${fmt(bestSellOpp.price)}</span>.
                             <br>
