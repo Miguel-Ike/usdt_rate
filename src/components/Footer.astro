@@ -1,0 +1,143 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer
+    class="w-full py-12 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md border-t border-white/10"
+>
+    <div class="container mx-auto px-4 max-w-7xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+            <!-- Col 1: Apoyo -->
+            <div class="space-y-4">
+                <h3
+                    class="text-lg font-bold text-on-surface-light dark:text-on-surface-dark"
+                >
+                    Apoya este proyecto
+                </h3>
+                <p
+                    class="text-sm text-on-surface-light/70 dark:text-on-surface-dark/70 leading-relaxed"
+                >
+                    Tu apoyo ayuda directamente a mantener el diseño, desarrollo
+                    y alojamiento de esta plataforma para que siga siendo rápida
+                    y gratuita.
+                </p>
+                <button
+                    id="copy-binance-id"
+                    class="group relative w-full flex items-center justify-between p-3 rounded-lg bg-surface-light-alt dark:bg-surface-dark-alt border border-white/10 hover:border-primary-light dark:hover:border-primary-dark transition-all duration-300"
+                >
+                    <div class="flex flex-col items-start">
+                        <span
+                            class="text-xs uppercase tracking-wider opacity-60 font-bold"
+                            >Binance ID</span
+                        >
+                        <span
+                            class="font-mono font-bold text-primary-light dark:text-primary-dark"
+                            >1012417174</span
+                        >
+                    </div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 opacity-60 group-hover:opacity-100 transition-opacity"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                        ></path>
+                    </svg>
+
+                    <!-- Tooltip / Success Message -->
+                    <span
+                        id="copy-feedback"
+                        class="absolute right-2 -top-8 bg-green-500 text-white text-xs px-2 py-1 rounded opacity-0 transition-opacity duration-300 pointer-events-none"
+                    >
+                        ¡Copiado!
+                    </span>
+                </button>
+            </div>
+
+            <!-- Col 2: Servicios -->
+            <div class="space-y-4">
+                <h3
+                    class="text-lg font-bold text-on-surface-light dark:text-on-surface-dark"
+                >
+                    Servicios a medida
+                </h3>
+                <p
+                    class="text-sm text-on-surface-light/70 dark:text-on-surface-dark/70 leading-relaxed"
+                >
+                    Soluciones P2P Personalizadas: ¿Buscas un bot de alertas, un
+                    panel privado o herramientas financieras personalizadas?
+                </p>
+                <a
+                    href="https://t.me/JeSuisMikey"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center w-full px-4 py-2 rounded-lg bg-white text-black font-bold hover:bg-gray-100 transition-colors shadow-md"
+                >
+                    Contactar por Telegram
+                </a>
+            </div>
+
+            <!-- Col 3: Feedback -->
+            <div class="space-y-4">
+                <h3
+                    class="text-lg font-bold text-on-surface-light dark:text-on-surface-dark"
+                >
+                    Feedback
+                </h3>
+                <p
+                    class="text-sm text-on-surface-light/70 dark:text-on-surface-dark/70 leading-relaxed"
+                >
+                    Próximamente lanzaremos una comunidad en Telegram para
+                    reportar fallos y sugerir nuevas funciones.
+                </p>
+                <button
+                    disabled
+                    class="w-full px-4 py-2 rounded-lg bg-surface-light-alt dark:bg-surface-dark-alt text-on-surface-light/40 dark:text-on-surface-dark/40 font-bold border border-white/5 cursor-not-allowed"
+                >
+                    Comunidad (Próximamente)
+                </button>
+            </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="pt-8 border-t border-white/10 text-center">
+            <p
+                class="text-sm font-medium opacity-60 text-on-surface-light dark:text-on-surface-dark"
+            >
+                &copy; {currentYear} Argus - USDT Rate
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Copy to clipboard logic
+    const copyBtn = document.getElementById("copy-binance-id");
+    const feedback = document.getElementById("copy-feedback");
+    const binanceID = "1012417174";
+
+    if (copyBtn && feedback) {
+        copyBtn.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(binanceID);
+
+                // Visual feedback
+                feedback.classList.remove("opacity-0");
+                feedback.classList.add("opacity-100");
+
+                setTimeout(() => {
+                    feedback.classList.remove("opacity-100");
+                    feedback.classList.add("opacity-0");
+                }, 2000);
+            } catch (err) {
+                console.error("Failed to copy text: ", err);
+            }
+        });
+    }
+</script>
