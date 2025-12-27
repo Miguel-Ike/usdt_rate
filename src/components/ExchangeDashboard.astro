@@ -21,137 +21,162 @@ const t = useTranslations(lang);
       </div>
 
       <div class="text-center md:text-left z-10">
-        <h2
-          class="text-3xl font-bold text-on-surface-light dark:text-on-surface-dark mb-2 tracking-tight"
-        >
-          {
-            lang === "es"
-              ? "Tipo de Cambio en Tiempo Real"
-              : lang === "fr"
-                ? "Taux de Change en Temps Réel"
-                : "Real-time Exchange Rates"
-          }
-        </h2>
-        <p class="text-sm font-medium opacity-70 mb-4">
-          {
-            lang === "es"
-              ? "Actualización automática cada 30s"
-              : lang === "fr"
-                ? "Mise à jour automatique toutes les 30s"
-                : "Auto-refresh every 30s"
-          }
-        </p>
-        <ModeSwitch />
+        <div class="text-center md:text-left z-10">
+          <div class="flex flex-col md:flex-row items-center gap-4 mb-2">
+            <h2
+              class="text-3xl font-bold text-on-surface-light dark:text-on-surface-dark tracking-tight"
+            >
+              {
+                lang === "es"
+                  ? "Tipo de Cambio en Tiempo Real"
+                  : lang === "fr"
+                    ? "Taux de Change en Temps Réel"
+                    : "Real-time Exchange Rates"
+              }
+            </h2>
+
+            <!-- Currency Selector -->
+            <div
+              class="flex items-center gap-2 bg-surface-light/50 dark:bg-surface-dark/50 p-1 rounded-lg border border-white/10 backdrop-blur-sm"
+            >
+              <button
+                id="btn-clp"
+                class="px-3 py-1 rounded-md text-sm font-bold transition-all duration-300 scale-110 bg-primary-light text-white dark:bg-primary-dark shadow-md"
+                onclick="setCurrency('CLP')"
+              >
+                CLP
+              </button>
+              <div class="w-px h-4 bg-white/20"></div>
+              <button
+                id="btn-bob"
+                class="px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 opacity-60 hover:opacity-100"
+                onclick="setCurrency('BOB')"
+              >
+                BOB
+              </button>
+            </div>
+          </div>
+
+          <p class="text-sm font-medium opacity-70 mb-4">
+            {
+              lang === "es"
+                ? "Actualización automática cada 30s"
+                : lang === "fr"
+                  ? "Mise à jour automatique toutes les 30s"
+                  : "Auto-refresh every 30s"
+            }
+          </p>
+          <ModeSwitch />
+          <div
+            id="merchant-analysis"
+            class="hidden mt-6 p-4 rounded-xl bg-surface-light-alt dark:bg-surface-dark-alt border border-white/10 text-sm space-y-2 font-mono"
+          >
+            <!-- Analysis content will be injected here -->
+          </div>
+        </div>
+
         <div
-          id="merchant-analysis"
-          class="hidden mt-6 p-4 rounded-xl bg-surface-light-alt dark:bg-surface-dark-alt border border-white/10 text-sm space-y-2 font-mono"
+          class="flex items-center gap-3 bg-surface-light/60 dark:bg-surface-dark/60 rounded-full px-6 py-3 border border-white/10 shadow-inner z-10"
         >
-          <!-- Analysis content will be injected here -->
+          <span
+            class="text-sm font-bold opacity-60 uppercase tracking-widest text-[10px]"
+          >
+            {lang === "es" ? "TIMER" : "TIMER"}
+          </span>
+          <span
+            id="timer"
+            class="font-mono text-3xl font-black text-green-500 tabular-nums"
+            >29s</span
+          >
         </div>
       </div>
 
-      <div
-        class="flex items-center gap-3 bg-surface-light/60 dark:bg-surface-dark/60 rounded-full px-6 py-3 border border-white/10 shadow-inner z-10"
-      >
-        <span
-          class="text-sm font-bold opacity-60 uppercase tracking-widest text-[10px]"
-        >
-          {lang === "es" ? "TIMER" : "TIMER"}
-        </span>
-        <span
-          id="timer"
-          class="font-mono text-3xl font-black text-green-500 tabular-nums"
-          >29s</span
-        >
-      </div>
+      <!-- CARD 1: CHILE (COMPRA/ASK) -->
+      <RateCard countryCode="cl" type="buy" id="rates-clp-ask" />
+
+      <!-- CARD 2: CHILE (VENTA/BID) -->
+      <RateCard countryCode="cl" type="sell" id="rates-clp-bid" />
+
+      <!-- CARD 3: BOLIVIA (COMPRA/ASK) -->
+      <RateCard countryCode="bo" type="buy" id="rates-bob-ask" />
+
+      <!-- CARD 4: BOLIVIA (VENTA/BID) -->
+      <RateCard countryCode="bo" type="sell" id="rates-bob-bid" />
     </div>
-
-    <!-- CARD 1: CHILE (COMPRA/ASK) -->
-    <RateCard countryCode="cl" type="buy" id="rates-clp-ask" />
-
-    <!-- CARD 2: CHILE (VENTA/BID) -->
-    <RateCard countryCode="cl" type="sell" id="rates-clp-bid" />
-
-    <!-- CARD 3: BOLIVIA (COMPRA/ASK) -->
-    <RateCard countryCode="bo" type="buy" id="rates-bob-ask" />
-
-    <!-- CARD 4: BOLIVIA (VENTA/BID) -->
-    <RateCard countryCode="bo" type="sell" id="rates-bob-bid" />
   </div>
-</div>
 
-<script is:inline>
-  const URL_BOB = "https://criptoya.com/api/USDT/BOB/0.1";
-  const URL_CLP = "https://criptoya.com/api/USDT/CLP/0.1";
-  const TARGET_EXCHANGES = ["binancep2p", "bybitp2p", "bitgetp2p"];
+  <script is:inline>
+    const URL_BOB = "https://criptoya.com/api/USDT/BOB/0.1";
+    const URL_CLP = "https://criptoya.com/api/USDT/CLP/0.1";
+    const TARGET_EXCHANGES = ["binancep2p", "bybitp2p", "bitgetp2p"];
 
-  const EXCHANGE_NAMES = {
-    binancep2p: "Binance",
-    bybitp2p: "Bybit",
-    bitgetp2p: "Bitget",
-  };
+    const EXCHANGE_NAMES = {
+      binancep2p: "Binance",
+      bybitp2p: "Bybit",
+      bitgetp2p: "Bitget",
+    };
 
-  const EXCHANGE_ICONS = {
-    binancep2p:
-      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32"><path fill="#F3BA2F" d="M16.002 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16S7.163 0 16.002 0zm-5.63 9.47l-2.656 2.657l5.63 5.632l-2.95 2.95l-3.355-3.354l-2.657 2.656l6.012 6.013l6.015-6.013l-2.657-2.656l-3.358 3.354l-2.95-2.95l5.63-5.633zm11.26 2.657l-2.656-2.657l-5.632 5.633l2.952 2.95l3.354-3.354l2.657 2.656l-6.012 6.013l-6.012-6.013l2.656-2.656l3.355 3.354l2.95-2.95l-5.63-5.633z"/></svg>',
-    bybitp2p:
-      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M0 0h24v24H0z" opacity="0"/><path fill="currentColor" d="M17.65 6.95c.03-.22.17-.41.38-.48c.17-.07.39-.02.5.12c1 1.25 1.77 2.66 2.27 4.19c.07.22.01.46-.17.6c-.14.11-.32.13-.48.07a10.45 10.45 0 0 1-5.74-4.22c-.11-.17-.11-.38 0-.54c.11-.18.32-.27.52-.23c.95.19 1.83.35 2.72.49zm-8.8 8.8c-.85 1.55-2.26 2.6-4.04 2.89c-.18.03-.35-.06-.44-.22c-.09-.16-.06-.35.06-.48c.7-1.15 1.25-2.39 1.63-3.69c.04-.15.15-.26.3-.31c.15-.05.32-.01.43.09c1.9 1.65 3.3 3.1 4.56 4.67c.12.15.12.35.01.49c-.11.12-.27.18-.43.16c-.7-.09-1.4-.29-2.08-.6zm4.9-3.23c-1.63-3.8-5.32-6.57-9.66-6.68c-.18 0-.35.12-.41.29c-.06.17-.01.37.13.48c1.37 1.15 2.5 2.58 3.28 4.2c.4 1.34 1.3 2.5 2.64 3.12c1.78.83 3.86.6 5.46-.35c.16-.09.24-.29.18-.46c-.23-.62-.97-1.41-1.62-.6z"/></svg>',
-    bitgetp2p:
-      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2.5 12a9.5 9.5 0 1 1 19 0a9.5 9.5 0 0 1-19 0Zm9.5-6.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13Z" opacity=".5"/><path fill="#02D5CC" d="M8.5 7.5h7v2.5H12v2h3.5v2.5h-7V12H12v-2H8.5V7.5Z"/></svg>',
-  };
+    const EXCHANGE_ICONS = {
+      binancep2p:
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 32 32"><path fill="#F3BA2F" d="M16.002 0c8.837 0 16 7.163 16 16s-7.163 16-16 16S0 24.837 0 16S7.163 0 16.002 0zm-5.63 9.47l-2.656 2.657l5.63 5.632l-2.95 2.95l-3.355-3.354l-2.657 2.656l6.012 6.013l6.015-6.013l-2.657-2.656l-3.358 3.354l-2.95-2.95l5.63-5.633zm11.26 2.657l-2.656-2.657l-5.632 5.633l2.952 2.95l3.354-3.354l2.657 2.656l-6.012 6.013l-6.012-6.013l2.656-2.656l3.355 3.354l2.95-2.95l-5.63-5.633z"/></svg>',
+      bybitp2p:
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M0 0h24v24H0z" opacity="0"/><path fill="currentColor" d="M17.65 6.95c.03-.22.17-.41.38-.48c.17-.07.39-.02.5.12c1 1.25 1.77 2.66 2.27 4.19c.07.22.01.46-.17.6c-.14.11-.32.13-.48.07a10.45 10.45 0 0 1-5.74-4.22c-.11-.17-.11-.38 0-.54c.11-.18.32-.27.52-.23c.95.19 1.83.35 2.72.49zm-8.8 8.8c-.85 1.55-2.26 2.6-4.04 2.89c-.18.03-.35-.06-.44-.22c-.09-.16-.06-.35.06-.48c.7-1.15 1.25-2.39 1.63-3.69c.04-.15.15-.26.3-.31c.15-.05.32-.01.43.09c1.9 1.65 3.3 3.1 4.56 4.67c.12.15.12.35.01.49c-.11.12-.27.18-.43.16c-.7-.09-1.4-.29-2.08-.6zm4.9-3.23c-1.63-3.8-5.32-6.57-9.66-6.68c-.18 0-.35.12-.41.29c-.06.17-.01.37.13.48c1.37 1.15 2.5 2.58 3.28 4.2c.4 1.34 1.3 2.5 2.64 3.12c1.78.83 3.86.6 5.46-.35c.16-.09.24-.29.18-.46c-.23-.62-.97-1.41-1.62-.6z"/></svg>',
+      bitgetp2p:
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M2.5 12a9.5 9.5 0 1 1 19 0a9.5 9.5 0 0 1-19 0Zm9.5-6.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13Z" opacity=".5"/><path fill="#02D5CC" d="M8.5 7.5h7v2.5H12v2h3.5v2.5h-7V12H12v-2H8.5V7.5Z"/></svg>',
+    };
 
-  let timeLeft = 29;
-  const timerEl = document.getElementById("timer");
+    let timeLeft = 29;
+    const timerEl = document.getElementById("timer");
 
-  function updateTimerColor(time) {
-    if (!timerEl) return;
+    function updateTimerColor(time) {
+      if (!timerEl) return;
 
-    timerEl.classList.remove(
-      "text-green-500",
-      "text-yellow-500",
-      "text-red-500",
-    );
+      timerEl.classList.remove(
+        "text-green-500",
+        "text-yellow-500",
+        "text-red-500",
+      );
 
-    if (time >= 20) {
-      timerEl.classList.add("text-green-500");
-    } else if (time >= 10) {
-      timerEl.classList.add("text-yellow-500");
-    } else {
-      timerEl.classList.add("text-red-500");
-    }
-  }
-
-  function renderRow(
-    exchangeKey,
-    price,
-    format = "BOB",
-    isBest = false,
-    type = "ask",
-  ) {
-    const cleanName = EXCHANGE_NAMES[exchangeKey] || exchangeKey;
-    const icon =
-      EXCHANGE_ICONS[exchangeKey] ||
-      '<span class="w-5 h-5 bg-gray-500 rounded-full inline-block"></span>';
-    const formattedPrice = new Intl.NumberFormat("es-CL", {
-      style: "currency",
-      currency: format,
-      minimumFractionDigits: 2,
-    }).format(price);
-
-    // Highlight classes
-    let priceClass =
-      "font-mono font-bold text-lg tracking-tight transition-all duration-300";
-    if (isBest) {
-      if (type === "ask") {
-        // Best Buy = Lowest Price = Green
-        priceClass += " text-green-500 dark:text-green-400 scale-110";
+      if (time >= 20) {
+        timerEl.classList.add("text-green-500");
+      } else if (time >= 10) {
+        timerEl.classList.add("text-yellow-500");
       } else {
-        // Best Sell = Highest Price = Red
-        priceClass += " text-red-500 dark:text-red-400 scale-110";
+        timerEl.classList.add("text-red-500");
       }
     }
 
-    return `
+    function renderRow(
+      exchangeKey,
+      price,
+      format = "BOB",
+      isBest = false,
+      type = "ask",
+    ) {
+      const cleanName = EXCHANGE_NAMES[exchangeKey] || exchangeKey;
+      const icon =
+        EXCHANGE_ICONS[exchangeKey] ||
+        '<span class="w-5 h-5 bg-gray-500 rounded-full inline-block"></span>';
+      const formattedPrice = new Intl.NumberFormat("es-CL", {
+        style: "currency",
+        currency: format,
+        minimumFractionDigits: 2,
+      }).format(price);
+
+      // Highlight classes
+      let priceClass =
+        "font-mono font-bold text-lg tracking-tight transition-all duration-300";
+      if (isBest) {
+        if (type === "ask") {
+          // Best Buy = Lowest Price = Green
+          priceClass += " text-green-500 dark:text-green-400 scale-110";
+        } else {
+          // Best Sell = Highest Price = Red
+          priceClass += " text-red-500 dark:text-red-400 scale-110";
+        }
+      }
+
+      return `
       <div class="flex items-center justify-between p-3 rounded-2xl bg-white/5 dark:bg-black/5 hover:bg-white/10 dark:hover:bg-white/10 transition-colors border border-transparent hover:border-white/10 ${isBest ? "bg-white/10 dark:bg-white/5 border-white/20" : ""}">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-full bg-white dark:bg-black/20 flex items-center justify-center text-primary-light dark:text-primary-dark shadow-sm">
@@ -162,69 +187,152 @@ const t = useTranslations(lang);
         <span class="${priceClass}">${formattedPrice}</span>
       </div>
     `;
-  }
+    }
 
-  let currentMode = "client";
+    let currentMode = "client";
+    let currentCurrency = "CLP";
 
-  document.addEventListener("mode-change", (e) => {
-    currentMode = e.detail.mode;
-    fetchAndRender(); // Re-render immediately
-  });
+    // Make available globally for onclick
+    window.setCurrency = (curr) => {
+      currentCurrency = curr;
+      updateCurrencyUI();
+      filterDashboard();
+    };
 
-  async function fetchAndRender() {
-    try {
-      const [bobData, clpData] = await Promise.all([
-        fetch(URL_BOB).then((r) => r.json()),
-        fetch(URL_CLP).then((r) => r.json()),
-      ]);
+    function updateCurrencyUI() {
+      const btnCLP = document.getElementById("btn-clp");
+      const btnBOB = document.getElementById("btn-bob");
 
+      if (!btnCLP || !btnBOB) return;
+
+      const activeClasses = [
+        "scale-110",
+        "bg-primary-light",
+        "text-white",
+        "dark:bg-primary-dark",
+        "shadow-md",
+        "font-bold",
+        "opacity-100",
+      ];
+      const inactiveClasses = ["opacity-60", "font-medium"]; // Removed hover:opacity-100 as it's always there
+
+      if (currentCurrency === "CLP") {
+        btnCLP.classList.add(...activeClasses);
+        btnCLP.classList.remove(...inactiveClasses);
+
+        btnBOB.classList.remove(...activeClasses);
+        btnBOB.classList.add(...inactiveClasses);
+      } else {
+        btnBOB.classList.add(...activeClasses);
+        btnBOB.classList.remove(...inactiveClasses);
+
+        btnCLP.classList.remove(...activeClasses);
+        btnCLP.classList.add(...inactiveClasses);
+      }
+    }
+
+    function filterDashboard() {
+      // Filter Cards
+      const cards = [
+        { id: "rates-clp-ask", curr: "CLP" },
+        { id: "rates-clp-bid", curr: "CLP" },
+        { id: "rates-bob-ask", curr: "BOB" },
+        { id: "rates-bob-bid", curr: "BOB" },
+      ];
+
+      cards.forEach((card) => {
+        const targetList = document.getElementById(card.id);
+        if (targetList) {
+          // RateCard structure: root div > header div > content div (id=card.id)
+          // We want to hide the root div (grandparent of content div)
+          const rootCard = targetList.closest(".group"); // The root div has class 'group'
+
+          if (rootCard) {
+            if (card.curr === currentCurrency) {
+              rootCard.parentElement.style.display = ""; // Show the column wrapper
+            } else {
+              rootCard.parentElement.style.display = "none"; // Hide the column wrapper
+            }
+          }
+        }
+      });
+
+      // Filter Merchant Analysis
+      // Re-trigger fetchAndRender to update analysis content based on currentCurrency
+      fetchAndRender();
+    }
+
+    document.addEventListener("mode-change", (e) => {
+      currentMode = e.detail.mode;
+      // Toggle visibility of the merchant analysis container
       const analysisEl = document.getElementById("merchant-analysis");
       if (analysisEl) {
         if (currentMode === "merchant") {
           analysisEl.classList.remove("hidden");
+        } else {
+          analysisEl.classList.add("hidden");
+        }
+      }
+      // Update filtering and re-render data because mode or analysis box visibility changed
+      fetchAndRender();
+    });
 
-          const analyze = (data, currency) => {
-            const askItems = TARGET_EXCHANGES.map((ex) => ({
-              ex,
-              price: data[ex]?.ask,
-            })).filter((i) => i.price);
-            const bidItems = TARGET_EXCHANGES.map((ex) => ({
-              ex,
-              price: data[ex]?.bid,
-            })).filter((i) => i.price);
+    async function fetchAndRender() {
+      try {
+        const [bobData, clpData] = await Promise.all([
+          fetch(URL_BOB).then((r) => r.json()),
+          fetch(URL_CLP).then((r) => r.json()),
+        ]);
 
-            if (!askItems.length || !bidItems.length) return "";
+        const analysisEl = document.getElementById("merchant-analysis");
+        if (analysisEl) {
+          if (currentMode === "merchant") {
+            analysisEl.classList.remove("hidden");
 
-            // Find Best BUY (Lowest Ask) - Standard "Taker" buy price
-            // MERCHANT MODE: Merchant "Buys" from User Selling (Bid). Limit Order perspective?
-            // User says: "comprar en [Lowest Bid] ... y vender en [Highest Ask]"
+            const analyze = (data, currency) => {
+              if (currency !== currentCurrency) return ""; // Analysis Filtering
 
-            // "Mejor Compra" (Where I buy cheaper) -> LOWEST BID (User Sell)
-            const bestBuyOpp = bidItems.reduce(
-              (min, p) => (p.price < min.price ? p : min),
-              bidItems[0],
-            );
+              const askItems = TARGET_EXCHANGES.map((ex) => ({
+                ex,
+                price: data[ex]?.ask,
+              })).filter((i) => i.price);
+              const bidItems = TARGET_EXCHANGES.map((ex) => ({
+                ex,
+                price: data[ex]?.bid,
+              })).filter((i) => i.price);
 
-            // "Mejor Venta" (Where I sell higher) -> HIGHEST ASK (User Buy)
-            const bestSellOpp = askItems.reduce(
-              (max, p) => (p.price > max.price ? p : max),
-              askItems[0],
-            );
+              if (!askItems.length || !bidItems.length) return "";
 
-            // Spread = My Sell Price - My Buy Price
-            const spread = bestSellOpp.price - bestBuyOpp.price;
-            const spreadPercent = ((spread / bestBuyOpp.price) * 100).toFixed(
-              2,
-            );
+              // Find Best BUY (Lowest Ask) - Standard "Taker" buy price
+              // MERCHANT MODE: Merchant "Buys" from User Selling (Bid). Limit Order perspective?
+              // User says: "comprar en [Lowest Bid] ... y vender en [Highest Ask]"
 
-            const fmt = (p) =>
-              new Intl.NumberFormat("es-CL", {
-                style: "currency",
-                currency: currency,
-              }).format(p);
-            const cleanName = (n) => EXCHANGE_NAMES[n] || n;
+              // "Mejor Compra" (Where I buy cheaper) -> LOWEST BID (User Sell)
+              const bestBuyOpp = bidItems.reduce(
+                (min, p) => (p.price < min.price ? p : min),
+                bidItems[0],
+              );
 
-            return `
+              // "Mejor Venta" (Where I sell higher) -> HIGHEST ASK (User Buy)
+              const bestSellOpp = askItems.reduce(
+                (max, p) => (p.price > max.price ? p : max),
+                askItems[0],
+              );
+
+              // Spread = My Sell Price - My Buy Price
+              const spread = bestSellOpp.price - bestBuyOpp.price;
+              const spreadPercent = ((spread / bestBuyOpp.price) * 100).toFixed(
+                2,
+              );
+
+              const fmt = (p) =>
+                new Intl.NumberFormat("es-CL", {
+                  style: "currency",
+                  currency: currency,
+                }).format(p);
+              const cleanName = (n) => EXCHANGE_NAMES[n] || n;
+
+              return `
                     <div class="mb-4 last:mb-0">
                         <p class="text-sm leading-relaxed text-on-surface-light/90 dark:text-on-surface-dark/90">
                             En <span class="font-bold text-primary-light dark:text-primary-dark">${currency}</span>: 
@@ -235,114 +343,115 @@ const t = useTranslations(lang);
                         </p>
                     </div>
                   `;
-          };
+            };
 
-          analysisEl.innerHTML =
-            analyze(clpData, "CLP") + analyze(bobData, "BOB");
-        } else {
-          analysisEl.classList.add("hidden");
+            analysisEl.innerHTML =
+              analyze(clpData, "CLP") + analyze(bobData, "BOB");
+          } else {
+            analysisEl.classList.add("hidden");
+          }
         }
+
+        // Remove local listener definition happening here previously
+
+        // Helper to generate HTML for a section
+        const generateList = (data, type, currency) => {
+          // Priority Order: Bybit > Bitget > Binance
+          const PRIORITY = ["bybitp2p", "bitgetp2p", "binancep2p"];
+
+          // 1. Extract valid prices
+          const validItems = TARGET_EXCHANGES.map((ex) => {
+            const item = data[ex];
+            if (!item) return null;
+            return { ex, price: type === "ask" ? item.ask : item.bid };
+          }).filter((item) => item !== null);
+
+          // 2. Find Best Price AND Winner (with priority)
+          let winnerEx = null;
+
+          if (validItems.length > 0) {
+            const prices = validItems.map((i) => i.price);
+            let bestPrice;
+
+            if (currentMode === "merchant") {
+              // Merchant Logic:
+              // Buy (Ask) -> Highest is best
+              // Sell (Bid) -> Lowest is best
+              if (type === "ask") {
+                bestPrice = Math.max(...prices);
+              } else {
+                bestPrice = Math.min(...prices);
+              }
+            } else {
+              // Client Logic (Standard):
+              // Buy (Ask) -> Lowest is best
+              // Sell (Bid) -> Highest is best
+              if (type === "ask") {
+                bestPrice = Math.min(...prices); // Lowest for Buy
+              } else {
+                bestPrice = Math.max(...prices); // Highest for Sell
+              }
+            }
+
+            // Find all exchanges with this best price
+            const candidates = validItems.filter((i) => i.price === bestPrice);
+
+            // Sort candidates by Priority Index (lower index = higher priority)
+            candidates.sort((a, b) => {
+              const idxA = PRIORITY.indexOf(a.ex);
+              const idxB = PRIORITY.indexOf(b.ex);
+              // Handle cases where exchange might not be in priority list (fallback to end)
+              const realIdxA = idxA === -1 ? 999 : idxA;
+              const realIdxB = idxB === -1 ? 999 : idxB;
+              return realIdxA - realIdxB;
+            });
+
+            // The first one is the winner
+            if (candidates.length > 0) {
+              winnerEx = candidates[0].ex;
+            }
+          }
+
+          // 3. Render
+          return validItems
+            .map((item) => {
+              const isBest = winnerEx && item.ex === winnerEx;
+              return renderRow(item.ex, item.price, currency, isBest, type);
+            })
+            .join("");
+        };
+
+        // Update DOM
+        const clpAskEl = document.getElementById("rates-clp-ask");
+        const clpBidEl = document.getElementById("rates-clp-bid");
+        const bobAskEl = document.getElementById("rates-bob-ask");
+        const bobBidEl = document.getElementById("rates-bob-bid");
+
+        if (clpAskEl) clpAskEl.innerHTML = generateList(clpData, "ask", "CLP");
+        if (clpBidEl) clpBidEl.innerHTML = generateList(clpData, "bid", "CLP");
+        if (bobAskEl) bobAskEl.innerHTML = generateList(bobData, "ask", "BOB");
+        if (bobBidEl) bobBidEl.innerHTML = generateList(bobData, "bid", "BOB");
+      } catch (e) {
+        console.error("Error fetching rates:", e);
+      }
+    }
+
+    // Timer Loop
+    setInterval(() => {
+      timeLeft--;
+
+      if (timerEl) {
+        timerEl.textContent = `${timeLeft}s`;
+        updateTimerColor(timeLeft);
       }
 
-      // Remove local listener definition happening here previously
+      if (timeLeft <= 0) {
+        timeLeft = 30; // Reset to 30 so next tick shows 29
+        fetchAndRender();
+      }
+    }, 1000);
 
-      // Helper to generate HTML for a section
-      const generateList = (data, type, currency) => {
-        // Priority Order: Bybit > Bitget > Binance
-        const PRIORITY = ["bybitp2p", "bitgetp2p", "binancep2p"];
-
-        // 1. Extract valid prices
-        const validItems = TARGET_EXCHANGES.map((ex) => {
-          const item = data[ex];
-          if (!item) return null;
-          return { ex, price: type === "ask" ? item.ask : item.bid };
-        }).filter((item) => item !== null);
-
-        // 2. Find Best Price AND Winner (with priority)
-        let winnerEx = null;
-
-        if (validItems.length > 0) {
-          const prices = validItems.map((i) => i.price);
-          let bestPrice;
-
-          if (currentMode === "merchant") {
-            // Merchant Logic:
-            // Buy (Ask) -> Highest is best
-            // Sell (Bid) -> Lowest is best
-            if (type === "ask") {
-              bestPrice = Math.max(...prices);
-            } else {
-              bestPrice = Math.min(...prices);
-            }
-          } else {
-            // Client Logic (Standard):
-            // Buy (Ask) -> Lowest is best
-            // Sell (Bid) -> Highest is best
-            if (type === "ask") {
-              bestPrice = Math.min(...prices); // Lowest for Buy
-            } else {
-              bestPrice = Math.max(...prices); // Highest for Sell
-            }
-          }
-
-          // Find all exchanges with this best price
-          const candidates = validItems.filter((i) => i.price === bestPrice);
-
-          // Sort candidates by Priority Index (lower index = higher priority)
-          candidates.sort((a, b) => {
-            const idxA = PRIORITY.indexOf(a.ex);
-            const idxB = PRIORITY.indexOf(b.ex);
-            // Handle cases where exchange might not be in priority list (fallback to end)
-            const realIdxA = idxA === -1 ? 999 : idxA;
-            const realIdxB = idxB === -1 ? 999 : idxB;
-            return realIdxA - realIdxB;
-          });
-
-          // The first one is the winner
-          if (candidates.length > 0) {
-            winnerEx = candidates[0].ex;
-          }
-        }
-
-        // 3. Render
-        return validItems
-          .map((item) => {
-            const isBest = winnerEx && item.ex === winnerEx;
-            return renderRow(item.ex, item.price, currency, isBest, type);
-          })
-          .join("");
-      };
-
-      // Update DOM
-      const clpAskEl = document.getElementById("rates-clp-ask");
-      const clpBidEl = document.getElementById("rates-clp-bid");
-      const bobAskEl = document.getElementById("rates-bob-ask");
-      const bobBidEl = document.getElementById("rates-bob-bid");
-
-      if (clpAskEl) clpAskEl.innerHTML = generateList(clpData, "ask", "CLP");
-      if (clpBidEl) clpBidEl.innerHTML = generateList(clpData, "bid", "CLP");
-      if (bobAskEl) bobAskEl.innerHTML = generateList(bobData, "ask", "BOB");
-      if (bobBidEl) bobBidEl.innerHTML = generateList(bobData, "bid", "BOB");
-    } catch (e) {
-      console.error("Error fetching rates:", e);
-    }
-  }
-
-  // Timer Loop
-  setInterval(() => {
-    timeLeft--;
-
-    if (timerEl) {
-      timerEl.textContent = `${timeLeft}s`;
-      updateTimerColor(timeLeft);
-    }
-
-    if (timeLeft <= 0) {
-      timeLeft = 30; // Reset to 30 so next tick shows 29
-      fetchAndRender();
-    }
-  }, 1000);
-
-  // Initial Load
-  fetchAndRender();
-</script>
+    // Initial Load
+    fetchAndRender();
+  </script>
+</div>
