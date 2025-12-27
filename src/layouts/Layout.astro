@@ -23,11 +23,8 @@ const { title, lang, description } = Astro.props;
 
     <script is:inline>
       // Immediately check local storage or system preference to avoid flash
-      if (
-        localStorage.theme === "dark" ||
-        (!("theme" in localStorage) &&
-          window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
+      // Default to dark mode if no preference is set, or if explicit 'dark' preference exists
+      if (localStorage.theme === "dark" || !("theme" in localStorage)) {
         document.documentElement.classList.add("dark");
       } else {
         document.documentElement.classList.remove("dark");
