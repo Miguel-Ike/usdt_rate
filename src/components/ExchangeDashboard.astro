@@ -196,18 +196,26 @@ const t = useTranslations(lang);
             if (!askItems.length || !bidItems.length) return "";
 
             // Find Best BUY (Lowest Ask) - Standard "Taker" buy price
-            const bestAsk = askItems.reduce(
+            // MERCHANT MODE: Merchant "Buys" from User Selling (Bid). Limit Order perspective?
+            // User says: "comprar en [Lowest Bid] ... y vender en [Highest Ask]"
+
+            // "Mejor Compra" (Where I buy cheaper) -> LOWEST BID (User Sell)
+            const bestBuyOpp = bidItems.reduce(
               (min, p) => (p.price < min.price ? p : min),
-              askItems[0],
-            );
-            // Find Best SELL (Highest Bid) - Standard "Taker" sell price
-            const bestBid = bidItems.reduce(
-              (max, p) => (p.price > max.price ? p : max),
               bidItems[0],
             );
 
-            const spread = bestAsk.price - bestBid.price;
-            const spreadPercent = ((spread / bestAsk.price) * 100).toFixed(2);
+            // "Mejor Venta" (Where I sell higher) -> HIGHEST ASK (User Buy)
+            const bestSellOpp = askItems.reduce(
+              (max, p) => (p.price > max.price ? p : max),
+              askItems[0],
+            );
+
+            // Spread = My Sell Price - My Buy Price
+            const spread = bestSellOpp.price - bestBuyOpp.price;
+            const spreadPercent = ((spread / bestBuyOpp.price) * 100).toFixed(
+              2,
+            );
 
             const fmt = (p) =>
               new Intl.NumberFormat("es-CL", {
@@ -222,11 +230,11 @@ const t = useTranslations(lang);
                         <div class="grid grid-cols-1 gap-1 opacity-80">
                             <div class="flex justify-between items-center">
                                 <span>Mejor Compra (Venta):</span>
-                                <span class="font-bold text-green-500 flex items-center gap-1">${fmt(bestAsk.price)} <span class="text-[10px] uppercase opacity-70 border border-current px-1 rounded">${cleanName(bestAsk.ex)}</span></span>
+                                <span class="font-bold text-green-500 flex items-center gap-1">${fmt(bestBuyOpp.price)} <span class="text-[10px] uppercase opacity-70 border border-current px-1 rounded">${cleanName(bestBuyOpp.ex)}</span></span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span>Mejor Venta (Compra):</span>
-                                <span class="font-bold text-red-500 flex items-center gap-1">${fmt(bestBid.price)} <span class="text-[10px] uppercase opacity-70 border border-current px-1 rounded">${cleanName(bestBid.ex)}</span></span>
+                                <span class="font-bold text-red-500 flex items-center gap-1">${fmt(bestSellOpp.price)} <span class="text-[10px] uppercase opacity-70 border border-current px-1 rounded">${cleanName(bestSellOpp.ex)}</span></span>
                             </div>
                             <div class="flex justify-between pt-1 mt-1 border-t border-white/10 text-xs">
                                 <span class="uppercase tracking-wider opacity-70">Spread / Margen</span>
