@@ -84,6 +84,11 @@ const t = useTranslations(lang);
                     "font-bold",
                 );
             }
+
+            // Dispatch event
+            const mode = toggle.checked ? "merchant" : "client";
+            const event = new CustomEvent("mode-change", { detail: { mode } });
+            document.dispatchEvent(event);
         };
 
         toggle.addEventListener("change", updateLabels);

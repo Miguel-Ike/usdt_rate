@@ -158,12 +158,21 @@ const t = useTranslations(lang);
     `;
   }
 
+  let currentMode = "client";
+
+  document.addEventListener("mode-change", (e) => {
+    currentMode = e.detail.mode;
+    fetchAndRender(); // Re-render immediately
+  });
+
   async function fetchAndRender() {
     try {
       const [bobData, clpData] = await Promise.all([
         fetch(URL_BOB).then((r) => r.json()),
         fetch(URL_CLP).then((r) => r.json()),
       ]);
+
+      // Remove local listener definition happening here previously
 
       // Helper to generate HTML for a section
       const generateList = (data, type, currency) => {
@@ -184,10 +193,24 @@ const t = useTranslations(lang);
           const prices = validItems.map((i) => i.price);
           let bestPrice;
 
-          if (type === "ask") {
-            bestPrice = Math.min(...prices); // Lowest for Buy
+          if (currentMode === "merchant") {
+            // Merchant Logic:
+            // Buy (Ask) -> Highest is best
+            // Sell (Bid) -> Lowest is best
+            if (type === "ask") {
+              bestPrice = Math.max(...prices);
+            } else {
+              bestPrice = Math.min(...prices);
+            }
           } else {
-            bestPrice = Math.max(...prices); // Highest for Sell
+            // Client Logic (Standard):
+            // Buy (Ask) -> Lowest is best
+            // Sell (Bid) -> Highest is best
+            if (type === "ask") {
+              bestPrice = Math.min(...prices); // Lowest for Buy
+            } else {
+              bestPrice = Math.max(...prices); // Highest for Sell
+            }
           }
 
           // Find all exchanges with this best price
