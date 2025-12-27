@@ -341,13 +341,36 @@ const t = useTranslations(lang);
               }).format(p);
             const cleanName = (n) => EXCHANGE_NAMES[n] || n;
 
+            const lang = document.documentElement.lang || "es";
+            const t = {
+              es: {
+                buyAt: "Comprar en",
+                sellAt: "y vender en",
+                margin: "Esto genera un margen de",
+                at: "a",
+              },
+              en: {
+                buyAt: "Buy at",
+                sellAt: "and sell at",
+                margin: "This generates a margin of",
+                at: "at",
+              },
+              fr: {
+                buyAt: "Acheter sur",
+                sellAt: "et vendre sur",
+                margin: "Cela génère une marge de",
+                at: "à",
+              },
+            };
+            const txt = t[lang] || t.es;
+
             return `
                     <div class="mb-4 last:mb-0">
                         <p class="text-sm leading-relaxed text-on-surface-light/90 dark:text-on-surface-dark/90">
-                            Comprar en <strong class="text-green-500">${cleanName(bestBuyOpp.ex)}</strong> a <span class="font-mono font-bold">${fmt(bestBuyOpp.price)}</span> 
-                            y vender en <strong class="text-red-500">${cleanName(bestSellOpp.ex)}</strong> a <span class="font-mono font-bold">${fmt(bestSellOpp.price)}</span>.
+                            ${txt.buyAt} <strong class="text-green-500">${cleanName(bestBuyOpp.ex)}</strong> ${txt.at} <span class="font-mono font-bold">${fmt(bestBuyOpp.price)}</span> 
+                            ${txt.sellAt} <strong class="text-red-500">${cleanName(bestSellOpp.ex)}</strong> ${txt.at} <span class="font-mono font-bold">${fmt(bestSellOpp.price)}</span>.
                             <br>
-                            Esto genera un margen de <span class="font-mono font-bold">${fmt(spread)}</span> (<span class="font-mono">${spreadPercent}%</span>).
+                            ${txt.margin} <span class="font-mono font-bold">${fmt(spread)}</span> (<span class="font-mono">${spreadPercent}%</span>).
                         </p>
                     </div>
                   `;
