@@ -40,15 +40,15 @@ const t = useTranslations(lang);
           >
             <button
               id="btn-clp"
-              class="px-3 py-1 rounded-md text-sm font-bold transition-all duration-300 scale-110 bg-primary-light text-white dark:bg-primary-dark shadow-md"
+              class="px-3 py-1 rounded-md text-sm font-bold transition-all duration-300 scale-110 bg-amber-400 text-black dark:bg-amber-500 shadow-md"
               onclick="setCurrency('CLP')"
             >
               CLP
             </button>
-            <div class="w-px h-4 bg-white/20"></div>
+            <div class="w-px h-4 bg-white/20 dark:bg-white/10"></div>
             <button
               id="btn-bob"
-              class="px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 opacity-60 hover:opacity-100"
+              class="px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 opacity-60 hover:opacity-100 text-black dark:text-white"
               onclick="setCurrency('BOB')"
             >
               BOB
@@ -206,14 +206,20 @@ const t = useTranslations(lang);
 
     const activeClasses = [
       "scale-110",
-      "bg-primary-light",
-      "text-white",
-      "dark:bg-primary-dark",
+      "bg-amber-400",
+      "text-black",
+      "dark:bg-amber-500",
       "shadow-md",
       "font-bold",
       "opacity-100",
     ];
-    const inactiveClasses = ["opacity-60", "font-medium"]; // Removed hover:opacity-100 as it's always there
+    // Inactive: Use text-black/60 or text-gray-800 for high light-mode visibility
+    const inactiveClasses = [
+      "opacity-60",
+      "font-medium",
+      "text-black",
+      "dark:text-white",
+    ];
 
     if (currentCurrency === "CLP") {
       btnCLP.classList.add(...activeClasses);
